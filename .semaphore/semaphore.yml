@@ -27,8 +27,9 @@ blocks:
       jobs:
         - name: "\U0001F4E6 Install Dependencies"
           commands:
+            - mkdir -p .pip_cache
             - cache restore
-            - pip install -r requirements.txt
+            - pip install --user --cache-dir .pip_cache -r requirements.txt
             - cache store
   - name: "\U0001F50D Code Quality"
     dependencies:
