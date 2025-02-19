@@ -1,5 +1,6 @@
 from demo_project import calculator
 
+
 def test_integration_workflow():
     # Simulate a workflow using multiple operations
     a = 10
@@ -9,4 +10,3 @@ def test_integration_workflow():
     result = calculator.subtract(result, 10)  # 30 - 10 = 20
     result = calculator.divide(result, 4)     # 20 / 4 = 5
     assert result == 5
-
