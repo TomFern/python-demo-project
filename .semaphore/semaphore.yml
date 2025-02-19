@@ -19,7 +19,9 @@ global_job_config:
   prologue:
     commands:
       - checkout
-      - python -m pip install --upgrade pip
+      - mkdir -p .pip_cache
+      - cache restore
+      - pip install --user --cache-dir .pip_cache -r requirements.txt
 blocks:
   - name: "\U0001F6E0️ Setup and Cache"
     dependencies: []
@@ -27,9 +29,6 @@ blocks:
       jobs:
         - name: "\U0001F4E6 Install Dependencies"
           commands:
-            - mkdir -p .pip_cache
-            - cache restore
-            - pip install --user --cache-dir .pip_cache -r requirements.txt
             - cache store
   - name: "\U0001F50D Code Quality"
     dependencies:
@@ -38,23 +37,15 @@ blocks:
       jobs:
         - name: ✨ Lint and Format
           commands:
-            - cache restore
             - make lint
   - name: "\U0001F9EA Test Suite"
     dependencies:
       - "\U0001F6E0️ Setup and Cache"
     task:
-      env_vars:
-        - name: PYTHONPATH
-          value: .
-        - name: DJANGO_SETTINGS_MODULE
-          value: config.settings.test
-        - name: DATABASE_URL
-          value: 'postgresql://postgres@localhost:5432/test_db'
+      env_vars: []
       jobs:
         - name: "\U0001F7E2 Pytest"
           commands:
-            - cache restore
             - make test
   - name: Build
     dependencies:
@@ -64,6 +55,5 @@ blocks:
       jobs:
         - name: Build wheel
           commands:
-            - cache restore
             - make build
             - artifact push workflow dist
